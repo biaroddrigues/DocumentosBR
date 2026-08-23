@@ -41,12 +41,6 @@ const CHECKOUT_URL = "https://pay.kiwify.com.br/ehcdbOb";
 // Checkout real do Kit Consultório Ortopédico (Kiwify).
 const KIT_INFO_URL = "https://pay.kiwify.com.br/qTJN4vC";
 
-// Checkout real do Cérebro Digital de Ortopedia (Kiwify).
-const CEREBRO_URL = "https://pay.kiwify.com.br/Luvd6Lr";
-
-// Site real das Fichas de Avaliação Ortopédica.
-const FICHAS_SITE_URL = "https://fichas.brrecovery.com.br";
-
 // Login de quem já é cliente. O mesmo app das Fichas também atende os
 // clientes de Documentos (confirmado no histórico de commits do projeto:
 // "Login direto e tela de acesso neutra para clientes de Documentos").
@@ -89,13 +83,6 @@ const DOCUMENTOS = [
     oQueE: "Uma estrutura para registrar pressão, frequência cardíaca e saturação quando isso fizer sentido no atendimento.",
     quando: "Nos casos em que acompanhar esses dados faz parte da sua avaliação.",
   },
-];
-
-const COMO_O_PREENCHIMENTO_FUNCIONA = [
-  { n: "1", titulo: "Escolha o documento", texto: "Selecione qual dos 6 documentos você precisa nesse momento." },
-  { n: "2", titulo: "Preencha os campos", texto: "Nome, dados do paciente, valores e demais informações da rotina." },
-  { n: "3", titulo: "O texto se organiza sozinho", texto: "As informações preenchidas entram automaticamente no corpo do documento." },
-  { n: "4", titulo: "Revise e adapte", texto: "Ajuste o que quiser antes de usar, editar não é um passo extra." },
 ];
 
 const FAQ = [
@@ -227,7 +214,7 @@ function DemoPreenchimento() {
   const valorTexto = valor.trim() || "0";
 
   return (
-    <section id="demonstracao" className="py-16 sm:py-24 scroll-mt-16" style={{ backgroundColor: BRAND.bg }}>
+    <section id="demonstracao" className="pt-16 sm:pt-24 pb-12 sm:pb-16 scroll-mt-16" style={{ backgroundColor: BRAND.bg }}>
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
         <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
           <div
@@ -412,7 +399,7 @@ export default function DocumentosLandingPage() {
       </section>
 
       {/* 3. Produto real */}
-      <section className="py-14 sm:py-20">
+      <section className="pt-14 sm:pt-20 pb-10 sm:pb-14">
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="max-w-2xl mb-10">
             <h2 className="text-2xl sm:text-3xl font-bold mb-3">O documento de verdade, não um exemplo</h2>
@@ -451,16 +438,16 @@ export default function DocumentosLandingPage() {
       {/* 4. Demonstração interativa */}
       <DemoPreenchimento />
 
-      {/* 5. Como o preenchimento funciona */}
-      <section className="py-14 sm:py-20 text-white" style={{ backgroundColor: BRAND.vital }}>
-        <div className="max-w-5xl mx-auto px-4 sm:px-6">
-          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-10 text-white">Como o preenchimento funciona</h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {COMO_O_PREENCHIMENTO_FUNCIONA.map((p) => (
-              <div key={p.n} className="rounded-xl p-5" style={{ backgroundColor: "rgba(244,242,231,0.06)" }}>
-                <div className="text-2xl font-extrabold mb-2" style={{ color: BRAND.accent }}>{p.n}</div>
-                <div className="font-bold text-sm mb-1 text-white">{p.titulo}</div>
-                <p className="text-xs leading-relaxed" style={{ color: "rgba(244,242,231,0.75)" }}>{p.texto}</p>
+      {/* 5. Como o preenchimento funciona, faixa curta */}
+      <section className="py-8 sm:py-10 text-white" style={{ backgroundColor: BRAND.vital }}>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-3 sm:gap-x-4">
+            {["Escolha", "Preencha", "Revise", "Use"].map((etapa, i, arr) => (
+              <div key={etapa} className="flex items-center gap-x-3 sm:gap-x-4">
+                <span className="text-sm sm:text-base font-bold text-white">{etapa}</span>
+                {i < arr.length - 1 && (
+                  <ArrowRight className="h-4 w-4 shrink-0" style={{ color: BRAND.accent }} />
+                )}
               </div>
             ))}
           </div>
@@ -468,7 +455,7 @@ export default function DocumentosLandingPage() {
       </section>
 
       {/* 6. Os 6 documentos, escaneável */}
-      <section className="py-14 sm:py-20" style={{ backgroundColor: BRAND.bg }}>
+      <section className="pt-14 sm:pt-20 pb-10 sm:pb-14" style={{ backgroundColor: BRAND.bg }}>
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="max-w-2xl mb-10">
             <h2 className="text-2xl sm:text-3xl font-bold mb-3">Os 6 documentos incluídos</h2>
@@ -497,7 +484,7 @@ export default function DocumentosLandingPage() {
       </section>
 
       {/* 7. Edição e personalização */}
-      <section className="py-14 sm:py-20" style={{ backgroundColor: BRAND.bgAlt }}>
+      <section className="pt-10 sm:pt-14 pb-10 sm:pb-14" style={{ backgroundColor: BRAND.bgAlt }}>
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="grid lg:grid-cols-2 gap-10 items-center">
             <div>
@@ -538,7 +525,7 @@ export default function DocumentosLandingPage() {
       </section>
 
       {/* 8. Como funciona o acesso */}
-      <section className="py-14 sm:py-20">
+      <section className="pt-10 sm:pt-14 pb-14 sm:pb-20">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
           <h2 className="text-2xl sm:text-3xl font-bold mb-3">Como funciona o acesso</h2>
           <p className="text-sm sm:text-base leading-relaxed mb-8" style={{ color: BRAND.inkMuted }}>
@@ -690,7 +677,7 @@ export default function DocumentosLandingPage() {
       </section>
 
       {/* 12. FAQ */}
-      <section className="pt-4 sm:pt-6 pb-16 sm:pb-20" style={{ backgroundColor: BRAND.bgAlt }}>
+      <section className="pt-4 sm:pt-6 pb-12 sm:pb-16" style={{ backgroundColor: BRAND.bgAlt }}>
         <div className="max-w-2xl mx-auto px-4 sm:px-6">
           <h2 className="text-2xl sm:text-3xl font-bold text-center mb-10 pt-10">Perguntas frequentes</h2>
           <div className="space-y-3">
@@ -704,49 +691,11 @@ export default function DocumentosLandingPage() {
         </div>
       </section>
 
-      {/* 13. Ecossistema BR Recovery */}
-      <section className="py-14 sm:py-20">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6">
-          <div className="text-center mb-10">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-3">O ecossistema BR Recovery</h2>
-            <p className="text-sm sm:text-base max-w-2xl mx-auto leading-relaxed" style={{ color: BRAND.inkMuted }}>
-              Documentar, avaliar e conduzir o atendimento ortopédico, cada parte com seu produto.
-            </p>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-white rounded-xl border-2 p-5" style={{ borderColor: BRAND.accent }}>
-              <ListChecks className="h-6 w-6 mb-2" style={{ color: BRAND.accent }} />
-              <div className="font-bold text-sm mb-1">Documentos Profissionais</div>
-              <p className="text-xs leading-relaxed mb-2" style={{ color: BRAND.inkMuted }}>Organizar contratos, termos e controles do consultório.</p>
-              <span className="text-xs font-semibold" style={{ color: BRAND.accent }}>R$ 47, você está aqui</span>
-            </div>
-            <a href={FICHAS_SITE_URL} target="_blank" rel="noopener noreferrer" className="bg-white rounded-xl border p-5 transition hover:shadow-md" style={{ borderColor: BRAND.highlight }}>
-              <FileText className="h-6 w-6 mb-2" style={{ color: BRAND.accent }} />
-              <div className="font-bold text-sm mb-1">Fichas de Avaliação Ortopédica</div>
-              <p className="text-xs leading-relaxed mb-2" style={{ color: BRAND.inkMuted }}>Avaliar com os testes certos para cada condição.</p>
-              <span className="text-xs font-semibold underline" style={{ color: BRAND.ink }}>R$ 47, conhecer</span>
-            </a>
-            <a href={CEREBRO_URL} target="_blank" rel="noopener noreferrer" className="bg-white rounded-xl border p-5 transition hover:shadow-md" style={{ borderColor: BRAND.highlight }}>
-              <Sparkles className="h-6 w-6 mb-2" style={{ color: BRAND.accent }} />
-              <div className="font-bold text-sm mb-1">Cérebro Digital de Ortopedia</div>
-              <p className="text-xs leading-relaxed mb-2" style={{ color: BRAND.inkMuted }}>Consultar evidências para apoiar o raciocínio clínico.</p>
-              <span className="text-xs font-semibold underline" style={{ color: BRAND.ink }}>R$ 97, conhecer</span>
-            </a>
-            <a href={KIT_INFO_URL} target="_blank" rel="noopener noreferrer" className="rounded-xl border-2 p-5 bg-white shadow-md" style={{ borderColor: BRAND.accent }}>
-              <Package className="h-6 w-6 mb-2" style={{ color: BRAND.accent }} />
-              <div className="font-bold text-sm mb-1">Kit Consultório Ortopédico</div>
-              <p className="text-xs leading-relaxed mb-2" style={{ color: BRAND.inkMuted }}>Os três produtos juntos, por menos do que separados.</p>
-              <span className="text-xs font-semibold underline" style={{ color: BRAND.ink }}>R$ 147, conhecer</span>
-            </a>
-          </div>
-        </div>
-      </section>
-
       {/* CTA final */}
       <section className="py-10 sm:py-14 text-center px-4">
-        <h2 className="text-xl sm:text-2xl font-bold mb-3">Tenha os documentos prontos antes de precisar deles</h2>
+        <h2 className="text-xl sm:text-2xl font-bold mb-3">Deixe sua documentação organizada para a rotina.</h2>
         <p className="text-sm mb-4 max-w-xs sm:max-w-sm mx-auto" style={{ color: BRAND.inkMuted }}>
-          Garanta seu acesso agora e use no próximo atendimento.
+          Tenha os documentos que você precisa em um só lugar, prontos para preencher e adaptar quando necessário.
         </p>
         <CTAButton big>Quero acessar os documentos</CTAButton>
         <div className="mt-5">
