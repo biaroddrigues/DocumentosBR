@@ -12,7 +12,6 @@ import {
   HeartPulse,
   Video,
   Pencil,
-  Wand2,
   LayoutGrid,
   Package,
   Infinity as InfinityIcon,
@@ -21,6 +20,7 @@ import {
   PlayCircle,
   Plus,
 } from "lucide-react";
+import DocMicroDemo from "./DocMicroDemo.jsx";
 
 const BRAND = {
   bg: "#FAFAF4", // Branco Neutro Clean
@@ -52,36 +52,48 @@ const DOCUMENTOS = [
     nome: "Contrato de Prestação de Serviços",
     oQueE: "Define o tratamento combinado, valores, forma de pagamento e regras de remarcação e cancelamento.",
     quando: "Antes de iniciar o acompanhamento com um paciente novo.",
+    imagem: "/screenshots/contrato-prestacao-capa.jpg",
+    alt: "Contrato de Prestação de Serviços da BR Recovery, com cabeçalho de logo, nome e CREFITO, e campos organizados por seção numerada",
   },
   {
     icon: Video,
     nome: "Contrato de Telerreabilitação",
     oQueE: "Cobre as sessões feitas à distância, com as obrigações de cada parte e orientações para o paciente.",
     quando: "Quando parte ou todo o acompanhamento acontece por telerreabilitação.",
+    imagem: "/screenshots/telerreabilitacao.jpg",
+    alt: "Contrato de Telerreabilitação da BR Recovery, com o aviso importante de revisão jurídica e os campos do contratante e do contratado",
   },
   {
     icon: FileText,
     nome: "Termo de Consentimento Livre e Esclarecido",
     oQueE: "Registra que o paciente entendeu o tratamento proposto, os riscos e os benefícios envolvidos.",
     quando: "Na avaliação inicial, antes de começar os atendimentos.",
+    imagem: "/screenshots/tcle.jpg",
+    alt: "Termo de Consentimento Livre e Esclarecido da BR Recovery, com o aviso de revisão jurídica e os campos de dados do paciente e do profissional",
   },
   {
     icon: ImageIcon,
     nome: "Autorização de Uso de Imagem, Voz e Depoimento",
     oQueE: "Autoriza o uso de fotos, vídeos ou depoimentos do paciente para divulgar o trabalho do consultório.",
     quando: "Antes de postar evolução, resultado ou depoimento de um paciente.",
+    imagem: "/screenshots/autorizacao-imagem.jpg",
+    alt: "Autorização de Uso de Imagem, Voz e Depoimento da BR Recovery, documento completo com texto de autorização e campos de data e assinatura",
   },
   {
     icon: CalendarCheck,
     nome: "Controle de Presença",
     oQueE: "Uma tabela simples para registrar data e assinatura de cada sessão realizada.",
     quando: "No dia a dia do consultório, sessão após sessão.",
+    imagem: "/screenshots/controle-presenca.jpg",
+    alt: "Controle de Presença da BR Recovery, com o campo de nome do paciente e a tabela de registro de sessões por data e assinatura",
   },
   {
     icon: HeartPulse,
     nome: "Controle de Dados Vitais",
     oQueE: "Uma estrutura para registrar pressão, frequência cardíaca e saturação quando isso fizer sentido no atendimento.",
     quando: "Nos casos em que acompanhar esses dados faz parte da sua avaliação.",
+    imagem: "/screenshots/controle-dados-vitais.jpg",
+    alt: "Controle de Dados Vitais da BR Recovery, com a tabela de registro de pressão, frequência cardíaca e saturação por sessão",
   },
 ];
 
@@ -199,106 +211,16 @@ function MobileStickyBar() {
   );
 }
 
-// Demonstração interativa. Estado 100% local, nada é salvo, nada é
-// enviado para qualquer lugar. Recarregar a página limpa tudo. Os dois
-// trechos de texto abaixo reproduzem, de forma resumida, estrutura real
-// já usada no Contrato de Prestação de Serviços (preâmbulo com o nome das
-// partes e cláusula de valor por atendimento), sem inventar cláusula nova.
-function DemoPreenchimento() {
-  const [paciente, setPaciente] = useState("");
-  const [fisio, setFisio] = useState("");
-  const [valor, setValor] = useState("");
-
-  const nomePaciente = paciente.trim() || "Nome do paciente";
-  const nomeFisio = fisio.trim() || "Nome do fisioterapeuta";
-  const valorTexto = valor.trim() || "0";
-
+// Thumbnail com proporção fixa para o grid dos 6 documentos: cada
+// screenshot real tem uma proporção diferente (alguns retrato, alguns em
+// composição angulada mais larga), então recortamos só visualmente
+// (object-cover, sem gerar nenhuma imagem nova) para o grid ficar parelho,
+// sempre mostrando a parte de cima do documento (cabeçalho e título).
+function DocThumb({ src, alt }) {
   return (
-    <section id="demonstracao" className="pt-16 sm:pt-24 pb-12 sm:pb-16 scroll-mt-16" style={{ backgroundColor: BRAND.bg }}>
-      <div className="max-w-5xl mx-auto px-4 sm:px-6">
-        <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
-          <div
-            className="inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-semibold uppercase tracking-[0.14em] rounded-full px-3 py-1.5 mb-4"
-            style={{ backgroundColor: BRAND.highlight, color: BRAND.ink }}
-          >
-            <Wand2 className="h-3.5 w-3.5" />
-            Teste você mesma
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-bold mb-3">Veja como funciona</h2>
-          <p className="text-sm sm:text-base leading-relaxed" style={{ color: BRAND.inkMuted }}>
-            Preencha alguns campos e veja as informações entrarem no documento.
-          </p>
-        </div>
-
-        <div className="grid lg:grid-cols-2 gap-6 lg:gap-8 items-start max-w-4xl mx-auto">
-          <div className="bg-white rounded-2xl border shadow-sm p-5 sm:p-6 order-1" style={{ borderColor: BRAND.highlight }}>
-            <div className="text-xs font-semibold uppercase tracking-wide mb-4" style={{ color: BRAND.inkMuted }}>
-              Contrato de Prestação de Serviços, trecho de exemplo
-            </div>
-            <label className="block mb-4">
-              <span className="block text-xs font-semibold mb-1.5" style={{ color: BRAND.ink }}>Nome do(a) paciente</span>
-              <input
-                type="text"
-                value={paciente}
-                onChange={(e) => setPaciente(e.target.value)}
-                placeholder="Ex: Maria Fulana"
-                className="w-full rounded-lg border px-3 py-2.5 text-sm outline-none transition focus:ring-2"
-                style={{ borderColor: BRAND.inkMuted, color: BRAND.ink }}
-              />
-            </label>
-            <label className="block mb-4">
-              <span className="block text-xs font-semibold mb-1.5" style={{ color: BRAND.ink }}>Nome do(a) fisioterapeuta</span>
-              <input
-                type="text"
-                value={fisio}
-                onChange={(e) => setFisio(e.target.value)}
-                placeholder="Ex: Beatriz Rodrigues"
-                className="w-full rounded-lg border px-3 py-2.5 text-sm outline-none transition focus:ring-2"
-                style={{ borderColor: BRAND.inkMuted, color: BRAND.ink }}
-              />
-            </label>
-            <label className="block">
-              <span className="block text-xs font-semibold mb-1.5" style={{ color: BRAND.ink }}>Valor por atendimento (R$)</span>
-              <input
-                type="text"
-                inputMode="numeric"
-                value={valor}
-                onChange={(e) => setValor(e.target.value.replace(/[^0-9]/g, ""))}
-                placeholder="Ex: 150"
-                className="w-full rounded-lg border px-3 py-2.5 text-sm outline-none transition focus:ring-2"
-                style={{ borderColor: BRAND.inkMuted, color: BRAND.ink }}
-              />
-            </label>
-            <p className="text-xs mt-5 leading-relaxed" style={{ color: BRAND.inkMuted }}>
-              Isso é só uma demonstração. Os dados preenchidos aqui não são salvos e desaparecem ao recarregar a página.
-            </p>
-          </div>
-
-          <div className="rounded-2xl border shadow-md overflow-hidden bg-white order-2" style={{ borderColor: BRAND.highlight }}>
-            <div className="px-5 sm:px-6 py-3 text-xs font-semibold uppercase tracking-wide" style={{ backgroundColor: BRAND.bgAlt, color: BRAND.inkMuted }}>
-              Prévia do documento
-            </div>
-            <div className="p-5 sm:p-6 text-sm leading-relaxed" style={{ color: BRAND.ink }}>
-              <p className="mb-4">
-                Pelo presente instrumento particular, de um lado{" "}
-                <strong style={{ backgroundColor: BRAND.highlight }}>{nomePaciente}</strong>, doravante denominado(a)
-                CONTRATANTE, e de outro{" "}
-                <strong style={{ backgroundColor: BRAND.highlight }}>{nomeFisio}</strong>, fisioterapeuta responsável,
-                doravante denominado(a) CONTRATADO(A), têm entre si justo e acordado o presente Contrato de Prestação
-                de Serviços.
-              </p>
-              <p className="text-xs font-semibold uppercase tracking-wide mb-1" style={{ color: BRAND.inkMuted }}>
-                Cláusula Oitava, Preço e Condições de Pagamento
-              </p>
-              <p>
-                O serviço contratado no presente instrumento será remunerado pelo valor de{" "}
-                <strong style={{ backgroundColor: BRAND.highlight }}>R$ {valorTexto}</strong> por atendimento.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    <div className="rounded-lg border overflow-hidden bg-white mb-3" style={{ borderColor: BRAND.highlight, aspectRatio: "4 / 3" }}>
+      <img src={src} alt={alt} loading="lazy" className="w-full h-full object-cover object-top" />
+    </div>
   );
 }
 
@@ -398,47 +320,11 @@ export default function DocumentosLandingPage() {
         </div>
       </section>
 
-      {/* 3. Produto real */}
-      <section className="pt-14 sm:pt-20 pb-10 sm:pb-14">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6">
-          <div className="max-w-2xl mb-10">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-3">O documento de verdade, não um exemplo</h2>
-            <p className="text-sm sm:text-base leading-relaxed" style={{ color: BRAND.inkMuted }}>
-              Cada documento já vem com o seu nome, CREFITO e logo no cabeçalho, dividido em seções numeradas e
-              fácil de seguir do começo ao fim.
-            </p>
-          </div>
-          <div className="grid sm:grid-cols-2 gap-5 sm:gap-6 mb-5 sm:mb-6">
-            <ScreenshotCard
-              src="/screenshots/tcle.jpg"
-              alt="Termo de Consentimento Livre e Esclarecido da BR Recovery, com o aviso importante recomendando revisão por advogado e os campos de dados do paciente e do profissional"
-              legenda="Termo de Consentimento Livre e Esclarecido, com o aviso de revisão jurídica já incluído no próprio documento."
-              width={594}
-              height={841}
-              className="max-w-xs mx-auto sm:max-w-none"
-            />
-            <ScreenshotCard
-              src="/screenshots/autorizacao-imagem.jpg"
-              alt="Autorização de Uso de Imagem, Voz e Depoimento da BR Recovery, documento completo com texto de autorização e campos de data e assinatura"
-              legenda="Autorização de Uso de Imagem, Voz e Depoimento, pronta para assinatura."
-              width={594}
-              height={841}
-              className="max-w-xs mx-auto sm:max-w-none"
-            />
-          </div>
-          <ScreenshotCard
-            src="/screenshots/telerreabilitacao.jpg"
-            alt="Contrato de Telerreabilitação da BR Recovery, com o aviso importante de revisão jurídica, os campos do contratante e do contratado e o início do preâmbulo de qualificação das partes"
-            legenda="Contrato de Telerreabilitação, com os mesmos campos organizados por seção e o preâmbulo pronto para ser preenchido."
-            className="max-w-2xl mx-auto"
-          />
-        </div>
-      </section>
+      {/* 3. Demonstração interativa real (mecanismo real de merge tags do
+          produto, ver DocMicroDemo.jsx para a origem exata do conteúdo) */}
+      <DocMicroDemo />
 
-      {/* 4. Demonstração interativa */}
-      <DemoPreenchimento />
-
-      {/* 5. Como o preenchimento funciona, faixa curta */}
+      {/* 4. Como o preenchimento funciona, faixa curta */}
       <section className="py-8 sm:py-10 text-white" style={{ backgroundColor: BRAND.vital }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
           <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-3 sm:gap-x-4">
@@ -454,7 +340,7 @@ export default function DocumentosLandingPage() {
         </div>
       </section>
 
-      {/* 6. Os 6 documentos, escaneável */}
+      {/* 5. Os 6 documentos, com prova visual real em cada um */}
       <section className="pt-14 sm:pt-20 pb-10 sm:pb-14" style={{ backgroundColor: BRAND.bg }}>
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="max-w-2xl mb-10">
@@ -465,14 +351,17 @@ export default function DocumentosLandingPage() {
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {DOCUMENTOS.map((d) => (
-              <div key={d.nome} className="bg-white rounded-xl border shadow-sm p-5 flex flex-col" style={{ borderColor: BRAND.highlight }}>
-                <div
-                  className="h-10 w-10 rounded-lg flex items-center justify-center mb-3"
-                  style={{ backgroundColor: BRAND.highlight }}
-                >
-                  <d.icon className="h-5 w-5" style={{ color: BRAND.accent }} />
+              <div key={d.nome} className="bg-white rounded-xl border shadow-sm p-4 flex flex-col" style={{ borderColor: BRAND.highlight }}>
+                <DocThumb src={d.imagem} alt={d.alt} />
+                <div className="flex items-center gap-2 mb-2">
+                  <div
+                    className="h-7 w-7 shrink-0 rounded-lg flex items-center justify-center"
+                    style={{ backgroundColor: BRAND.highlight }}
+                  >
+                    <d.icon className="h-3.5 w-3.5" style={{ color: BRAND.accent }} />
+                  </div>
+                  <div className="font-bold text-sm">{d.nome}</div>
                 </div>
-                <div className="font-bold text-sm mb-2">{d.nome}</div>
                 <p className="text-xs leading-relaxed mb-3" style={{ color: BRAND.ink }}>{d.oQueE}</p>
                 <p className="text-xs leading-relaxed mt-auto" style={{ color: BRAND.inkMuted }}>
                   <span className="font-semibold">Quando usar:</span> {d.quando}
@@ -483,7 +372,7 @@ export default function DocumentosLandingPage() {
         </div>
       </section>
 
-      {/* 7. Edição e personalização */}
+      {/* 6. Edição e personalização, só o que a demonstração ainda não provou */}
       <section className="pt-10 sm:pt-14 pb-10 sm:pb-14" style={{ backgroundColor: BRAND.bgAlt }}>
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="grid lg:grid-cols-2 gap-10 items-center">
@@ -503,9 +392,9 @@ export default function DocumentosLandingPage() {
               </p>
               <ul className="space-y-2.5">
                 {[
-                  "Editar qualquer campo já preenchido",
+                  "Editar qualquer campo já preenchido, mesmo depois de pronto",
                   "Ajustar o texto do documento, além dos campos",
-                  "Nome, CREFITO e logo aplicados automaticamente no cabeçalho",
+                  "O mesmo preenchimento automático funciona nos 6 documentos, não só no contrato",
                   "Reutilizar o mesmo documento para outros pacientes",
                 ].map((texto) => (
                   <li key={texto} className="flex items-start gap-2.5 text-sm" style={{ color: BRAND.ink }}>
@@ -517,14 +406,14 @@ export default function DocumentosLandingPage() {
             </div>
             <ScreenshotCard
               src="/screenshots/contrato-preenchido-2.jpg"
-              alt="Contrato de Prestação de Serviços com os campos de contratante e contratado preenchidos, incluindo o preâmbulo do documento já com os dados mesclados no texto"
-              legenda="Os dados preenchidos nos campos entram direto no corpo do documento."
+              alt="Termo de Consentimento Livre e Esclarecido preenchido, com os dados do paciente e do profissional já mesclados no texto do termo"
+              legenda="O mesmo mecanismo de preenchimento automático do Contrato também funciona no TCLE e nos outros documentos."
             />
           </div>
         </div>
       </section>
 
-      {/* 8. Como funciona o acesso */}
+      {/* 7. Como funciona o acesso */}
       <section className="pt-10 sm:pt-14 pb-14 sm:pb-20">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
           <h2 className="text-2xl sm:text-3xl font-bold mb-3">Como funciona o acesso</h2>
@@ -540,7 +429,7 @@ export default function DocumentosLandingPage() {
         </div>
       </section>
 
-      {/* 9. Oferta individual */}
+      {/* 8. Oferta individual */}
       <section className="py-14 sm:py-20" style={{ backgroundColor: BRAND.bg }}>
         <div className="max-w-xl mx-auto px-4 sm:px-6 text-center">
           <h2 className="text-2xl sm:text-4xl font-extrabold mb-2">Documentos Profissionais BR Recovery</h2>
@@ -564,7 +453,7 @@ export default function DocumentosLandingPage() {
         </div>
       </section>
 
-      {/* 10. Kit Consultório Ortopédico, mini hero em Verde Vital */}
+      {/* 9. Kit Consultório Ortopédico, mini hero em Verde Vital */}
       <section className="py-16 sm:py-24" style={{ backgroundColor: BRAND.vital }}>
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
@@ -660,7 +549,7 @@ export default function DocumentosLandingPage() {
         </div>
       </section>
 
-      {/* 11. Garantia */}
+      {/* 10. Garantia */}
       <section className="py-10 sm:py-14">
         <div className="max-w-2xl mx-auto px-4 sm:px-6">
           <div className="bg-white rounded-2xl border shadow-sm p-6 sm:p-8 flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left" style={{ borderColor: BRAND.highlight }}>
@@ -676,7 +565,7 @@ export default function DocumentosLandingPage() {
         </div>
       </section>
 
-      {/* 12. FAQ */}
+      {/* 11. FAQ */}
       <section className="pt-4 sm:pt-6 pb-12 sm:pb-16" style={{ backgroundColor: BRAND.bgAlt }}>
         <div className="max-w-2xl mx-auto px-4 sm:px-6">
           <h2 className="text-2xl sm:text-3xl font-bold text-center mb-10 pt-10">Perguntas frequentes</h2>
