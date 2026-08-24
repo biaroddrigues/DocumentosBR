@@ -5,39 +5,55 @@
 // das fichas (esses continuam a viver só dentro de FichaEditorApp.jsx, no
 // repositório FichasClinicas).
 //
+// Esta versão restaura o LAYOUT E A EXPERIÊNCIA VISUAL da primeira
+// demonstração interativa da página (commit 10422b8, "Polimento final",
+// função DemoPreenchimento, a versão que existia antes da reformulação com
+// merge tags reais): dois cards lado a lado (campos | "Prévia do
+// documento"), 3 campos com rótulo simples, texto do documento com os
+// valores preenchidos em negrito e destaque. Único acréscimo sobre aquela
+// versão original: a sinalização de atenção (halo -> interação -> reação no
+// documento) já usada nas Fichas, camada puramente de UX, pedida
+// explicitamente para esta rodada.
+//
+// DIFERENÇA INTENCIONAL EM RELAÇÃO AO TEXTO DA VERSÃO ORIGINAL: a versão
+// original tinha um parágrafo escrito à mão, resumindo/parafraseando a
+// estrutura do contrato ("de um lado {nome}, doravante denominado(a)
+// CONTRATANTE, e de outro {fisio}, fisioterapeuta responsável..."), não o
+// texto literal do documento. Como esta rodada pede para usar a lógica REAL
+// de merge tags sempre que possível, o parágrafo abaixo foi reconstruído só
+// com substrings literais e não reescritas do texto real do contrato,
+// unidas por marcadores explícitos "..." nos pontos em que pula texto real
+// não exposto como campo (nacionalidade, estado civil, profissão, RG, CPF,
+// endereço de cada parte). Nada entre os "..." foi inventado, resumido ou
+// parafraseado.
+//
 // ORIGEM DO CONTEÚDO, para manter isso sincronizado se o contrato mudar
 // dentro do produto (DocumentosBR e FichasClinicas são repositórios e
 // deploys separados, não há import automático entre os dois):
-//
 // - buildMergeMap: copiada verbatim do mecanismo real de merge tags de
 //   FichaEditorApp.jsx (por volta das linhas 6063-6069).
 // - renderMergedClauseNodes: variante em nós React de renderMergedClause
 //   (mesma origem, linhas 6070-6076), reescrita para permitir destacar cada
 //   valor individualmente em vez de só devolver uma string.
-// - Rótulo, placeholder e mergeKey dos quatro campos usados aqui, copiados
+// - Rótulo, placeholder e mergeKey dos três campos usados aqui, copiados
 //   verbatim de FichaEditorApp.jsx, case "doc-contrato-servicos":
 //   "Nome completo do(a) paciente" -> pacienteNome, seção 02, linha ~8964.
-//   "CPF" (paciente) -> pacienteCPF, seção 02, linha ~8969.
 //   "Nome completo do(a) fisioterapeuta" -> fisioNome, seção 03, linha ~8977.
 //   "Valor por atendimento (R$)" -> valorAtendimento, seção 09, linha ~9025.
-// - Trechos de cláusula: montados só com substrings literais e não
-//   reescritas do texto real das seções 04 ("Preâmbulo, Qualificação das
-//   Partes", linha ~8988) e 09 ("Cláusula Oitava, Preço e Condições de
-//   Pagamento", linha ~9027), unidas por marcadores explícitos "..." nos
-//   pontos em que o trecho pula tokens reais que esta demonstração não expõe
-//   como campo (nacionalidade, estado civil, profissão, RG, endereço). Nada
-//   entre os "..." foi reescrito, resumido ou parafraseado; cada pedaço
-//   mantido é uma cópia exata do texto do contrato real.
+// - Trechos de cláusula: substrings do texto real das seções 04
+//   ("Preâmbulo, Qualificação das Partes", linha ~8988) e 09 ("Cláusula
+//   Oitava, Preço e Condições de Pagamento", linha ~9027).
 //
 // SE O TEXTO REAL DO CONTRATO DE PRESTAÇÃO DE SERVIÇOS MUDAR dentro do
 // produto, esta demonstração precisa ser revisada manualmente para
 // continuar batendo com o documento real.
 // ---------------------------------------------------------------------------
 import { useEffect, useRef, useState } from "react";
-import { FileSignature, User, Hash, Stethoscope, Scale, Wand2 } from "lucide-react";
+import { FileSignature, Wand2 } from "lucide-react";
 
 const BRAND = {
   bg: "#FAFAF4",
+  bgAlt: "#F1F0E4",
   ink: "#172014",
   inkMuted: "#7B8374",
   accent: "#A7B800",
@@ -84,14 +100,13 @@ function renderMergedClauseNodes(text, mergeMap, registerTokenRef) {
 // marcam explicitamente onde o trecho pula texto real não exposto.
 // ---------------------------------------------------------------------------
 const CAMPOS = [
-  { mergeKey: "pacienteNome", label: "Nome completo do(a) paciente", placeholder: "Nome completo...", icon: User },
-  { mergeKey: "pacienteCPF", label: "CPF do(a) paciente", placeholder: "000.000.000-00", icon: Hash },
-  { mergeKey: "fisioNome", label: "Nome completo do(a) fisioterapeuta", placeholder: "Nome completo...", icon: Stethoscope },
-  { mergeKey: "valorAtendimento", label: "Valor por atendimento (R$)", placeholder: "Ex: 150,00", icon: Scale },
+  { mergeKey: "pacienteNome", label: "Nome do(a) paciente", placeholder: "Ex: Maria Fulana" },
+  { mergeKey: "fisioNome", label: "Nome do(a) fisioterapeuta", placeholder: "Ex: Beatriz Rodrigues" },
+  { mergeKey: "valorAtendimento", label: "Valor por atendimento (R$)", placeholder: "Ex: 150,00" },
 ];
 
 const TRECHO_PREAMBULO =
-  "Pelo presente instrumento particular, de um lado {{pacienteNome}}, ... e do CPF nº {{pacienteCPF}}, ... doravante denominado(a) simplesmente CONTRATANTE; e de outro lado {{fisioNome}}, ... doravante denominado(a) simplesmente CONTRATADO(A)...";
+  "Pelo presente instrumento particular, de um lado {{pacienteNome}}, ... doravante denominado(a) simplesmente CONTRATANTE; e de outro lado {{fisioNome}}, ... doravante denominado(a) simplesmente CONTRATADO(A), têm entre si justo e contratado o presente Contrato de Prestação de Serviços de Fisioterapia...";
 const TRECHO_CLAUSULA_VALOR =
   "O serviço contratado no presente instrumento será remunerado pelo valor de R$ {{valorAtendimento}} por atendimento, ...";
 
@@ -154,38 +169,6 @@ function usePrefersReducedMotion() {
   return reduced;
 }
 
-function CampoFormulario({ campo, numero, ativo, value, onChange, onFocus, inputRef }) {
-  const Icon = campo.icon;
-  return (
-    <div className="flex items-start gap-3">
-      <span
-        className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border text-xs font-semibold mt-0.5"
-        style={{ borderColor: BRAND.highlight, backgroundColor: ativo ? BRAND.highlight : "#fff", color: BRAND.ink }}
-      >
-        {numero}
-      </span>
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-1.5 mb-1.5">
-          <Icon className="h-3.5 w-3.5 shrink-0" style={{ color: BRAND.accent }} />
-          <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: BRAND.inkMuted }}>
-            {campo.label}
-          </span>
-        </div>
-        <input
-          ref={inputRef}
-          type="text"
-          value={value}
-          placeholder={campo.placeholder}
-          onChange={onChange}
-          onFocus={onFocus}
-          className="w-full rounded-lg border px-3 py-2.5 text-sm outline-none transition focus:ring-2"
-          style={{ borderColor: "#CBD5C4", color: BRAND.ink }}
-        />
-      </div>
-    </div>
-  );
-}
-
 export default function DocMicroDemo() {
   const reducedMotion = usePrefersReducedMotion();
   const [values, setValues] = useState(() => Object.fromEntries(CAMPOS.map((c) => [c.mergeKey, ""])));
@@ -232,9 +215,7 @@ export default function DocMicroDemo() {
   function handleChange(i, campo) {
     return (e) => {
       const raw = e.target.value;
-      const v = campo.mergeKey === "pacienteCPF" || campo.mergeKey === "valorAtendimento"
-        ? raw.replace(/[^0-9.,-]/g, "")
-        : raw;
+      const v = campo.mergeKey === "valorAtendimento" ? raw.replace(/[^0-9.,-]/g, "") : raw;
       setValues((prev) => ({ ...prev, [campo.mergeKey]: v }));
       clearTimeout(debounceRefs.current[i]);
       if (!v.trim()) return;
@@ -248,7 +229,7 @@ export default function DocMicroDemo() {
   return (
     <section id="demonstracao" className="pt-16 sm:pt-24 pb-12 sm:pb-16 scroll-mt-16" style={{ backgroundColor: BRAND.bg }}>
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
-        <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-12">
+        <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
           <div
             className="inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-semibold uppercase tracking-[0.14em] rounded-full px-3 py-1.5 mb-4"
             style={{ backgroundColor: BRAND.highlight, color: BRAND.ink }}
@@ -262,61 +243,48 @@ export default function DocMicroDemo() {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-[minmax(0,280px)_1fr] gap-5 lg:gap-8 items-start">
-          <div className="bg-white rounded-2xl border shadow-sm p-5 space-y-5" style={{ borderColor: BRAND.highlight }}>
+        <div className="grid lg:grid-cols-2 gap-6 lg:gap-8 items-start max-w-4xl mx-auto">
+          <div className="bg-white rounded-2xl border shadow-sm p-5 sm:p-6 order-1" style={{ borderColor: BRAND.highlight }}>
+            <div className="text-xs font-semibold uppercase tracking-wide mb-4" style={{ color: BRAND.inkMuted }}>
+              Contrato de Prestação de Serviços, trecho de exemplo
+            </div>
             {CAMPOS.map((campo, i) => (
-              <CampoFormulario
-                key={campo.mergeKey}
-                campo={campo}
-                numero={i + 1}
-                ativo={stage === i && !doneRefs.current[i]}
-                value={values[campo.mergeKey]}
-                onChange={handleChange(i, campo)}
-                onFocus={() => handleFocus(i)}
-                inputRef={(el) => { inputRefs.current[i] = el; }}
-              />
+              <label className={i < CAMPOS.length - 1 ? "block mb-4" : "block"} key={campo.mergeKey}>
+                <span className="block text-xs font-semibold mb-1.5" style={{ color: BRAND.ink }}>{campo.label}</span>
+                <input
+                  ref={(el) => { inputRefs.current[i] = el; }}
+                  type="text"
+                  value={values[campo.mergeKey]}
+                  placeholder={campo.placeholder}
+                  onChange={handleChange(i, campo)}
+                  onFocus={() => handleFocus(i)}
+                  className="w-full rounded-lg border px-3 py-2.5 text-sm outline-none transition focus:ring-2"
+                  style={{ borderColor: BRAND.inkMuted, color: BRAND.ink }}
+                />
+              </label>
             ))}
+            <p className="text-xs mt-5 leading-relaxed" style={{ color: BRAND.inkMuted }}>
+              Isso é o mecanismo real do produto. Os dados preenchidos aqui não são salvos e desaparecem ao recarregar a página.
+            </p>
           </div>
 
-          <div className="rounded-2xl border shadow-sm overflow-hidden bg-white" style={{ borderColor: BRAND.highlight }}>
-            <div
-              className="px-5 sm:px-7 py-4 flex items-center gap-2.5 border-b"
-              style={{ backgroundColor: BRAND.bg, borderColor: BRAND.highlight }}
-            >
-              <FileSignature className="h-4 w-4 shrink-0" style={{ color: BRAND.accent }} />
-              <div className="min-w-0">
-                <p className="text-[11px] font-semibold uppercase tracking-wide truncate" style={{ color: BRAND.ink }}>
-                  Contrato de Prestação de Serviços
-                </p>
-                <p className="text-[10px]" style={{ color: BRAND.inkMuted }}>BR Recovery</p>
-              </div>
+          <div className="rounded-2xl border shadow-md overflow-hidden bg-white order-2" style={{ borderColor: BRAND.highlight }}>
+            <div className="px-5 sm:px-6 py-3 text-xs font-semibold uppercase tracking-wide" style={{ backgroundColor: BRAND.bgAlt, color: BRAND.inkMuted }}>
+              Prévia do documento
             </div>
-            <div className="px-5 sm:px-7 py-5 sm:py-6 space-y-5">
-              <div>
-                <p className="text-[10px] font-semibold uppercase tracking-wide mb-1.5" style={{ color: BRAND.inkMuted }}>
-                  Preâmbulo, Qualificação das Partes
-                </p>
-                <p className="text-sm leading-relaxed" style={{ color: BRAND.ink }}>
-                  {renderMergedClauseNodes(TRECHO_PREAMBULO, mergeMap, registerTokenRef)}
-                </p>
-              </div>
-              <div className="border-t" style={{ borderColor: BRAND.highlight }} />
-              <div>
-                <p className="text-[10px] font-semibold uppercase tracking-wide mb-1.5" style={{ color: BRAND.inkMuted }}>
-                  Cláusula Oitava, Preço e Condições de Pagamento
-                </p>
-                <p className="text-sm leading-relaxed" style={{ color: BRAND.ink }}>
-                  {renderMergedClauseNodes(TRECHO_CLAUSULA_VALOR, mergeMap, registerTokenRef)}
-                </p>
-              </div>
+            <div className="p-5 sm:p-6 text-sm leading-relaxed" style={{ color: BRAND.ink }}>
+              <p className="mb-4">
+                {renderMergedClauseNodes(TRECHO_PREAMBULO, mergeMap, registerTokenRef)}
+              </p>
+              <p className="text-xs font-semibold uppercase tracking-wide mb-1" style={{ color: BRAND.inkMuted }}>
+                Cláusula Oitava, Preço e Condições de Pagamento
+              </p>
+              <p>
+                {renderMergedClauseNodes(TRECHO_CLAUSULA_VALOR, mergeMap, registerTokenRef)}
+              </p>
             </div>
           </div>
         </div>
-
-        <p className="text-xs mt-6 text-center max-w-md mx-auto leading-relaxed" style={{ color: BRAND.inkMuted }}>
-          <FileSignature className="h-3.5 w-3.5 inline-block mr-1 align-text-bottom" style={{ color: BRAND.accent }} />
-          Isso é o mecanismo real do produto. Os dados digitados aqui não são salvos e desaparecem ao recarregar a página.
-        </p>
       </div>
     </section>
   );
