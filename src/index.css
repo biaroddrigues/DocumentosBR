@@ -123,3 +123,10 @@
 .main-offer{grid-template-columns:1fr auto}
 @media(max-width:900px){.main-offer{grid-template-columns:1fr auto}.main-offer>.buy-button{grid-column:auto}}
 @media(max-width:600px){.documents-section{padding-bottom:58px}.document-piece:last-child{margin-bottom:0!important}}
+
+/* Correções finais exclusivas do desktop */
+@media(min-width:901px){
+  .hero{height:auto;min-height:980px;max-height:none;padding-bottom:95px;overflow:visible}
+  .section-heading p{width:320px;font-size:22px;line-height:1.35;padding-top:16px}
+  .proof-note{font-size:16px;line-height:1.25;padding:14px 18px}
+}
