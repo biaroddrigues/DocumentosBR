@@ -49,7 +49,6 @@
 // continuar batendo com o documento real.
 // ---------------------------------------------------------------------------
 import { useEffect, useRef, useState } from "react";
-import { FileSignature, Wand2 } from "lucide-react";
 
 const BRAND = {
   bg: "#FAFAF4",
@@ -227,30 +226,18 @@ export default function DocMicroDemo() {
   const registerTokenRef = (key, el) => { tokenRefs.current[key] = el; };
 
   return (
-    <section id="demonstracao" className="pt-16 sm:pt-24 pb-12 sm:pb-16 scroll-mt-16" style={{ backgroundColor: BRAND.bg }}>
-      <div className="max-w-5xl mx-auto px-4 sm:px-6">
-        <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
-          <div
-            className="inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-semibold uppercase tracking-[0.14em] rounded-full px-3 py-1.5 mb-4"
-            style={{ backgroundColor: BRAND.highlight, color: BRAND.ink }}
-          >
-            <Wand2 className="h-3.5 w-3.5" />
-            Veja como funciona na prática
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-bold mb-3">Preencha os campos. Veja as informações entrarem automaticamente no documento.</h2>
-          <p className="text-sm sm:text-base leading-relaxed" style={{ color: BRAND.inkMuted }}>
-            Trechos reais do Contrato de Prestação de Serviços, o mesmo documento que você recebe no seu acesso.
-          </p>
+    <section id="demonstracao" className="demo-section">
+      <div className="demo-wrap">
+        <div className="demo-heading">
+          <h2>VOCÊ PREENCHE<br />UMA VEZ.<br /><mark>O CONTRATO<br />SE ORGANIZA.</mark></h2>
+          <p>Preencha os campos. Os dados aparecem automaticamente no corpo do documento. Depois, adapte o que quiser.</p>
         </div>
-
-        <div className="grid lg:grid-cols-2 gap-6 lg:gap-8 items-start max-w-4xl mx-auto">
-          <div className="bg-white rounded-2xl border shadow-sm p-5 sm:p-6 order-1" style={{ borderColor: BRAND.highlight }}>
-            <div className="text-xs font-semibold uppercase tracking-wide mb-4" style={{ color: BRAND.inkMuted }}>
-              Contrato de Prestação de Serviços, trecho de exemplo
-            </div>
+        <div className="demo-board">
+          <div className="demo-fields">
+            <div className="demo-panel-label"><span>DADOS DAS PARTES</span><span>01 / 03</span></div>
             {CAMPOS.map((campo, i) => (
-              <label className={i < CAMPOS.length - 1 ? "block mb-4" : "block"} key={campo.mergeKey}>
-                <span className="block text-xs font-semibold mb-1.5" style={{ color: BRAND.ink }}>{campo.label}</span>
+              <label className="demo-field" key={campo.mergeKey}>
+                <span>{campo.label}</span>
                 <input
                   ref={(el) => { inputRefs.current[i] = el; }}
                   type="text"
@@ -258,31 +245,19 @@ export default function DocMicroDemo() {
                   placeholder={campo.placeholder}
                   onChange={handleChange(i, campo)}
                   onFocus={() => handleFocus(i)}
-                  className="w-full rounded-lg border px-3 py-2.5 text-sm outline-none transition focus:ring-2"
-                  style={{ borderColor: BRAND.inkMuted, color: BRAND.ink }}
+                  aria-label={campo.label}
                 />
               </label>
             ))}
-            <p className="text-xs mt-5 leading-relaxed" style={{ color: BRAND.inkMuted }}>
-              Isso é o mecanismo real do produto. Os dados preenchidos aqui não são salvos e desaparecem ao recarregar a página.
-            </p>
+            <p className="demo-privacy">DEMONSTRAÇÃO REAL. OS DADOS DIGITADOS AQUI NÃO SÃO SALVOS.</p>
           </div>
-
-          <div className="rounded-2xl border shadow-md overflow-hidden bg-white order-2" style={{ borderColor: BRAND.highlight }}>
-            <div className="px-5 sm:px-6 py-3 text-xs font-semibold uppercase tracking-wide" style={{ backgroundColor: BRAND.bgAlt, color: BRAND.inkMuted }}>
-              Prévia do documento
-            </div>
-            <div className="p-5 sm:p-6 text-sm leading-relaxed" style={{ color: BRAND.ink }}>
-              <p className="mb-4">
-                {renderMergedClauseNodes(TRECHO_PREAMBULO, mergeMap, registerTokenRef)}
-              </p>
-              <p className="text-xs font-semibold uppercase tracking-wide mb-1" style={{ color: BRAND.inkMuted }}>
-                Cláusula Oitava, Preço e Condições de Pagamento
-              </p>
-              <p>
-                {renderMergedClauseNodes(TRECHO_CLAUSULA_VALOR, mergeMap, registerTokenRef)}
-              </p>
-            </div>
+          <div className="demo-document">
+            <div className="demo-doc-head"><strong>CONTRATO DE PRESTAÇÃO<br />DE SERVIÇOS</strong><span>BR RECOVERY / DOCUMENTO 01</span></div>
+            <h3 className="demo-clause-title">04 PREÂMBULO / QUALIFICAÇÃO DAS PARTES</h3>
+            <p>{renderMergedClauseNodes(TRECHO_PREAMBULO, mergeMap, registerTokenRef)}</p>
+            <h3 className="demo-clause-title">CLÁUSULA OITAVA, PREÇO E CONDIÇÕES DE PAGAMENTO</h3>
+            <p>{renderMergedClauseNodes(TRECHO_CLAUSULA_VALOR, mergeMap, registerTokenRef)}</p>
+            <div className="demo-callout">DIGITE NOS CAMPOS AO LADO E ACOMPANHE AS ALTERAÇÕES NESTE TRECHO.</div>
           </div>
         </div>
       </div>
