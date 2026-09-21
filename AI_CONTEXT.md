@@ -19,6 +19,12 @@ Documentos atuais:
 4. Autorização de Uso de Imagem, Voz e Depoimento
 5. Controle de Presença
 6. Controle de Dados Vitais
+7. Declaração de Comparecimento
+8. Encaminhamento Fisioterapêutico
+9. Relatório de Alta Fisioterapêutica
+10. Solicitação de Exame Complementar
+11. Consentimento para Dry Needling
+12. Notificação de Interrupção do Acompanhamento
 
 Características:
 
@@ -96,6 +102,17 @@ Após trabalhos, registrar:
 - próximo passo
 - rollback quando aplicável
 - status: PLANEJADO / IMPLEMENTADO NÃO TESTADO / TESTADO / PRODUÇÃO VALIDADA
+
+### 2026-09-21 — atualização comercial para 12 documentos
+
+- executado: atualização da landing de 6 para 12 documentos no hero, transição editorial, oferta e meta description; inclusão dos seis documentos adicionais no catálogo visual em composição tipográfica, preservando os seis screenshots reais existentes
+- produção alterada? não
+- arquivos alterados: `index.html`, `src/DocumentosLandingPage.jsx`, `src/index.css` e `AI_CONTEXT.md`
+- validações: build de produção em diretório temporário; revisão visual em desktop largo e mobile; 12 itens renderizados; seis imagens reais carregadas; sem overflow horizontal; console sem erros ou avisos
+- assets ausentes: não existem neste repositório screenshots reais de Declaração de Comparecimento, Encaminhamento Fisioterapêutico, Relatório de Alta Fisioterapêutica, Solicitação de Exame Complementar, Consentimento para Dry Needling e Notificação de Interrupção do Acompanhamento
+- próximo passo: revisão e commit seletivo, se aprovado
+- rollback: reverter somente os quatro arquivos desta atualização; nenhum estado remoto precisa ser revertido
+- status: TESTADO
 
 ### 2026-09-15 — Contexto compartilhado
 

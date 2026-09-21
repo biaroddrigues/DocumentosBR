@@ -130,3 +130,26 @@
   .section-heading p{width:320px;font-size:22px;line-height:1.35;padding-top:16px}
   .proof-note{font-size:16px;line-height:1.25;padding:14px 18px}
 }
+
+/* Catálogo ampliado: os seis documentos novos ainda não possuem screenshots neste projeto. */
+.doc-seven,.doc-ten{grid-column:1/5}
+.doc-eight,.doc-eleven{grid-column:5/9}
+.doc-nine,.doc-twelve{grid-column:9/13}
+.document-piece-text .document-caption{
+  min-height:160px;
+  margin-top:0;
+  padding-top:18px;
+  border-top:2px solid var(--ink);
+}
+.document-piece-text .document-caption h3{font-size:25px;line-height:1}
+
+@media(max-width:900px) and (min-width:601px){
+  .doc-seven,.doc-nine,.doc-eleven{grid-column:1/7}
+  .doc-eight,.doc-ten,.doc-twelve{grid-column:7/13}
+}
+
+@media(max-width:600px){
+  .document-piece-text{margin-bottom:38px!important}
+  .document-piece-text .document-caption{min-height:0;padding-bottom:10px}
+  .document-piece-text .document-caption h3{font-size:23px}
+}
